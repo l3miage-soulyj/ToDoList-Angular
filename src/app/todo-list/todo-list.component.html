@@ -1,0 +1,57 @@
+<section class="todoapp" *ngIf="tdlObs | async as tdl">
+  <header class="header">
+
+    <h1>{{tdl.label}}</h1>
+
+    <form (submit) = "create(lab.value); lab.value=''">
+      <input  name        = "newTodoInput"
+              class       = "new-todo"
+              placeholder = "Que faire?"
+              autofocus #lab/>
+    </form>
+
+  </header>
+
+  <section class="main">
+    <input  class="toggle-all"
+            type="checkbox"
+            name="toggleAll"
+            [ngModel]="tdl.allDone"
+    />
+    <label for="toggleAll"
+            (click)= "updateAllDone(!tdl.allDone, tdl.items)">Mark all as complete</label>
+    <ul class="todo-list">
+      <li *ngFor="let item of tdl.items.filter(tdl.filter); trackBy:trackById"
+        [class.completed] = "item.isDone"
+        [class.editing] = "todoItem.isEditing">
+          <app-todo-item [data] = "item"
+                        (update) = "update($event, item)"
+                        (remove) = "delete(item)"
+                        #todoItem>
+          </app-todo-item>
+      </li>
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <span class="todo-count"><strong>{{tdl.remaining}}</strong> restantes</span>
+    <ul class="filters">
+      <li>
+        <a class="filterAll"
+        (click)="filterAll()">Tous</a>
+      </li>
+      <li>
+        <a class="filterActives"
+        (click)="filterActive()">Actifs</a>
+      </li>
+      <li>
+        <a class="filterCompleted"
+        (click)="filterCompleted()">Complétés</a>
+      </li>
+    </ul>
+    <button class="clear-completed"
+      (click) = "supprCoches()">Supprimer cochées</button>
+  </footer>
+
+</section>
+
